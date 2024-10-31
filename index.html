@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Request Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f3f4f6;
+    }
+    .container {
+      background-color: #fff;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      color: #333;
+      margin-bottom: 1em;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .response {
+      margin-top: 1em;
+      padding: 1em;
+      background-color: #f8f9fa;
+      border: 1px solid #e2e6ea;
+      border-radius: 4px;
+      color: #333;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>API Request Tool</h2>
+    <label for="url">Request URL</label>
+    <input type="text" id="url" placeholder="Enter the request URL here" required />
+
+    <label for="payload">Request Payload (JSON)</label>
+    <textarea id="payload" placeholder='{"key": "value"}'></textarea>
+
+    <button onclick="sendRequest()">Send Request</button>
+    
+    <div id="response" class="response" style="display: none;"></div>
+  </div>
+
+  <script>
+    async function sendRequest() {
+      const url = document.getElementById("url").value;
+      const payload = document.getElementById("payload").value;
+      const responseBox = document.getElementById("response");
+
+      if (!url || !payload) {
+        alert("Please fill in both the URL and payload fields.");
+        return;
+      }
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json"
+          },
+          body: payload
+        });
+
+        const text = await response.text();
+        responseBox.style.display = 'block';
+        responseBox.textContent = `Status: ${response.status}\n\n${text}`;
+      } catch (error) {
+        responseBox.style.display = 'block';
+        responseBox.textContent = `Error: ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
